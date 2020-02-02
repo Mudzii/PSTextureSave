@@ -1,4 +1,4 @@
-﻿
+
 
 
 function CreateUI(mPath, oName, pName, oType){
@@ -141,6 +141,7 @@ var saveBtn = btnGrp.add("button", undefined, undefined, {name: "saveBtn"});
             //var msg = "Path: " + mPath.toString() + " Name: " + oName.toString() + " Part: " + pName.toString() + " Type:" + oType.toString();      
             $.writeln("Path: " + mPath + " Name: " + oName + " Part: " + pName + " Type: " + oType); 
             CreateFolders(mPath, oName);
+            Save(mPath, oName, pName, oType);
    }  
  
     
@@ -153,12 +154,42 @@ return UI;
 
 
 
+function Save(mPath, oName, pName, oType){
+    
+try{
+           var curDoc = app.activeDocument; 
+           var fileName = ""; 
+    
+            if(pName == ""){     
+                fileName = oName + "_" + oType; 
+            }
+ 
+            else {
+                fileName = oName + "_" + pName + "_" + oType; 
+            }
+            
+            var fullFileName = mPath + "/" + oName + "/textures/" +fileName + ".jpg"; 
+            var file = File(fullFileName);
+            
+            //var jpegConfig = new JPEGSaveOptions();
+           // jpegConfig.quality = 10;
+            
+            //curDoc.saveAs(file, jpegConfig);
+            
+            $.writeln(fullFileName); 
+  }          
 
-
-
-function Save(){
+catch(e){
+    
+    $.writeln("Error! No document currently open"); 
+           
+    }
+       
+   
     
 }
+
+
 
 function CreateFolders(mPath, oName){
     
@@ -167,9 +198,16 @@ function CreateFolders(mPath, oName){
      if(!newFolder.exists){
             
              $.writeln("Folder does not exist"); 
-             $.writeln(newFolder); 
              newFolder.create(); 
+
      }
+ 
+    var textureFolder = new Folder(newFolder + "/textures"); 
+      if(!textureFolder.exists){
+            textureFolder.create(); 
+      }
+    
+    
     
 }
 
