@@ -54,6 +54,7 @@ var pathBtn = pathGrp.add("button", undefined, undefined, {name: "pathBtn"});
     
     
      
+
 // === OBJ ===
 var objGrp = objPanel.add("group", undefined, {name: "objGrp"}); 
     objGrp.orientation = "row"; 
@@ -119,6 +120,8 @@ var typeDropList = typeSelectGrp.add("dropdownlist", undefined, undefined, {name
 
 // SAVEASGRP
 // =========
+/* 
+    
 var saveAsGRP = objPanel.add("group", undefined, {name: "saveAsGRP"}); 
     saveAsGRP.orientation = "row"; 
     saveAsGRP.alignChildren = ["left","center"]; 
@@ -130,6 +133,32 @@ var saveAsText = saveAsGRP.add("statictext", undefined, undefined, {name: "saveA
 
 var pngBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "pngBox"}); 
     pngBox.text = "PNG"; 
+    
+    pngBox.onClick = function() {
+        
+        var value = pngBox.value; 
+         $.writeln(value);
+        
+        if(value == true){
+            sType.push("PNG");
+            }
+        
+        else {
+           
+           for(var i = 0; i < sType.length; i++){
+               
+               if(sType[i] == "PNG"){
+                   sType.splice(i,1);
+                   }
+               
+               }
+            
+           
+         }
+        
+        $.writeln(sType);       
+    }
+
 
 var jpgBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "jpgBox"}); 
     jpgBox.text = "JPG"; 
@@ -137,6 +166,13 @@ var jpgBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "jpgBox"});
 var psdBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "psdBox"}); 
     psdBox.text = "PSD"; 
     
+*/ 
+    
+    
+    
+
+
+
 //  ======== BUTTON PANEL  ========
 var buttonPanel = UI.add("panel", undefined, undefined, {name: "buttonPanel"}); 
     buttonPanel.preferredSize.width = panelWidth; 
@@ -159,7 +195,7 @@ var saveBtn = btnGrp.add("button", undefined, undefined, {name: "saveBtn"});
     saveBtn.onClick = function (){  
             
             //var msg = "Path: " + mPath.toString() + " Name: " + oName.toString() + " Part: " + pName.toString() + " Type:" + oType.toString();      
-            $.writeln("Path: " + mPath + " Name: " + oName + " Part: " + pName + " Type: " + oType); 
+            //$.writeln("Path: " + mPath + " Name: " + oName + " Part: " + pName + " Type: " + oType); 
             CreateFolders(mPath, oName);
             Save(mPath, oName, pName, oType);
    }  
@@ -176,10 +212,18 @@ return UI;
 
 
 
+
+
+
 function Save(mPath, oName, pName, oType){
-    
+        
+        var PNG = false; 
+        var JPG = false; 
+        var PSD = false; 
+        
 try{
            var activeDoc = app.activeDocument; 
+           
            var fileName = ""; 
     
             if(pName == ""){     
@@ -191,18 +235,18 @@ try{
             }
             
             
-            
-            
-            // save as PNG texture
-            var fullFileNamePNG = mPath + "/" + oName + "/textures/" +fileName + ".png"; 
-            var PNGfile = new File(fullFileNamePNG);         
-            SavePNG(activeDoc, PNGfile);            
-            
-            // save as PSD
-            var fullFileNamePSD = mPath + "/" + oName + "/textures/" +fileName + ".psd"; 
-            var PSDfile = new File(fullFileNamePSD);         
-            SavePSD(activeDoc, PSDfile);            
-            
+              // save as PSD texture
+              var filePSD = mPath + "/" + oName + "/PSD/" +fileName + ".psd"; 
+              var PSDfile = new File(filePSD);         
+              SavePSD(activeDoc, PSDfile);    
+     
+                              
+              // save as PNG texture
+              var filePNG = mPath + "/" + oName + "/textures/" +fileName + ".png"; 
+              var PNGfile = new File(filePNG);         
+              SavePNG(activeDoc, PNGfile);  
+
+ 
   }          
 
 
@@ -221,6 +265,13 @@ function SavePNG(activeDoc, saveFile){
      //pngConfig.quality = 10;
             
      activeDoc.saveAs(saveFile, pngConfig, true, Extension.LOWERCASE);
+}
+
+function SaveJPG(activeDoc, saveFile){
+    var jpgConfig = new JPEGSaveOptions();
+     //pngConfig.quality = 10;
+            
+     activeDoc.saveAs(saveFile, jpgConfig, true, Extension.LOWERCASE);
 }
 
 function SavePSD(activeDoc, saveFile){
@@ -250,14 +301,21 @@ function CreateFolders(mPath, oName){
       }
     
     
+    var PSDFolder = new Folder(newFolder + "/PSD"); 
+    if(!PSDFolder.exists){
+            PSDFolder.create(); 
+      }
     
 }
+
+
 
 
 var mainPath = ""; 
 var objName = ""; 
 var partName = ""; 
 var objType = ""; 
+var saveType =[]; 
 
 var win = CreateUI(mainPath, objName, partName, objType); 
 win.show();
