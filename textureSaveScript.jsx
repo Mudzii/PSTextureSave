@@ -193,12 +193,6 @@ function SavePNG(activeDoc, saveFile){
      activeDoc.saveAs(saveFile, pngConfig, true, Extension.LOWERCASE);
 }
 
-function SaveJPG(activeDoc, saveFile){
-    
-    var jpgConfig = new JPEGSaveOptions();
-     activeDoc.saveAs(saveFile, jpgConfig, true, Extension.LOWERCASE);
-}
-
 function SavePSD(activeDoc, saveFile){
     
     var psdFile = new File(saveFile);
@@ -229,6 +223,8 @@ function CreateFolders(mPath, oName){
       }
     
 }
+
+
 
 
 //$.writeln("..."); 
