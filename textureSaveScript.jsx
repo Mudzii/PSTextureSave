@@ -47,13 +47,9 @@ var pathBtn = pathGrp.add("button", undefined, undefined, {name: "pathBtn"});
           if(folder != null){        
               pathInputText.text = folder.toString(); 
               mPath = folder; 
-              $.writeln('Path: ');
            }       
      }  
  
-    
-    
-     
 
 // === OBJ ===
 var objGrp = objPanel.add("group", undefined, {name: "objGrp"}); 
@@ -118,60 +114,6 @@ var typeDropList = typeSelectGrp.add("dropdownlist", undefined, undefined, {name
        oType = typeArray[typeDropList.selection.index];
     }
 
-// SAVEASGRP
-// =========
-/* 
-    
-var saveAsGRP = objPanel.add("group", undefined, {name: "saveAsGRP"}); 
-    saveAsGRP.orientation = "row"; 
-    saveAsGRP.alignChildren = ["left","center"]; 
-    saveAsGRP.spacing = 10; 
-    saveAsGRP.margins = 0; 
-
-var saveAsText = saveAsGRP.add("statictext", undefined, undefined, {name: "saveAsText"}); 
-    saveAsText.text = "Save As:"; 
-
-var pngBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "pngBox"}); 
-    pngBox.text = "PNG"; 
-    
-    pngBox.onClick = function() {
-        
-        var value = pngBox.value; 
-         $.writeln(value);
-        
-        if(value == true){
-            sType.push("PNG");
-            }
-        
-        else {
-           
-           for(var i = 0; i < sType.length; i++){
-               
-               if(sType[i] == "PNG"){
-                   sType.splice(i,1);
-                   }
-               
-               }
-            
-           
-         }
-        
-        $.writeln(sType);       
-    }
-
-
-var jpgBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "jpgBox"}); 
-    jpgBox.text = "JPG"; 
-
-var psdBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "psdBox"}); 
-    psdBox.text = "PSD"; 
-    
-*/ 
-    
-    
-    
-
-
 
 //  ======== BUTTON PANEL  ========
 var buttonPanel = UI.add("panel", undefined, undefined, {name: "buttonPanel"}); 
@@ -193,9 +135,6 @@ var saveBtn = btnGrp.add("button", undefined, undefined, {name: "saveBtn"});
     saveBtn.text = "Save"; 
     
     saveBtn.onClick = function (){  
-            
-            //var msg = "Path: " + mPath.toString() + " Name: " + oName.toString() + " Part: " + pName.toString() + " Type:" + oType.toString();      
-            //$.writeln("Path: " + mPath + " Name: " + oName + " Part: " + pName + " Type: " + oType); 
             CreateFolders(mPath, oName);
             Save(mPath, oName, pName, oType);
    }  
@@ -210,16 +149,8 @@ return UI;
 
 
 
-
-
-
-
-
 function Save(mPath, oName, pName, oType){
         
-        var PNG = false; 
-        var JPG = false; 
-        var PSD = false; 
         
 try{
            var activeDoc = app.activeDocument; 
@@ -245,8 +176,6 @@ try{
               var filePNG = mPath + "/" + oName + "/textures/" +fileName + ".png"; 
               var PNGfile = new File(filePNG);         
               SavePNG(activeDoc, PNGfile);  
-
- 
   }          
 
 
@@ -255,32 +184,28 @@ catch(e){
     $.writeln("Error! No document currently open"); 
            
     }
-       
-   
-    
+
 }
 
 function SavePNG(activeDoc, saveFile){
+    
     var pngConfig = new PNGSaveOptions();
-     //pngConfig.quality = 10;
-            
      activeDoc.saveAs(saveFile, pngConfig, true, Extension.LOWERCASE);
 }
 
 function SaveJPG(activeDoc, saveFile){
+    
     var jpgConfig = new JPEGSaveOptions();
-     //pngConfig.quality = 10;
-            
      activeDoc.saveAs(saveFile, jpgConfig, true, Extension.LOWERCASE);
 }
 
 function SavePSD(activeDoc, saveFile){
+    
     var psdFile = new File(saveFile);
     psdConfig = new PhotoshopSaveOptions();
     psdConfig.embedColorProfile = true;
     psdConfig.alphaChannels = true;  
     activeDoc.saveAs(saveFile, psdConfig, false, Extension.LOWERCASE);
-  
  }
 
 
@@ -289,18 +214,15 @@ function CreateFolders(mPath, oName){
     var newFolder = new Folder(mPath + "/" + oName);
 
      if(!newFolder.exists){
-            
              $.writeln("Folder does not exist"); 
              newFolder.create(); 
-
      }
  
     var textureFolder = new Folder(newFolder + "/textures"); 
       if(!textureFolder.exists){
             textureFolder.create(); 
       }
-    
-    
+
     var PSDFolder = new Folder(newFolder + "/PSD"); 
     if(!PSDFolder.exists){
             PSDFolder.create(); 
@@ -309,7 +231,7 @@ function CreateFolders(mPath, oName){
 }
 
 
-
+//$.writeln("..."); 
 
 var mainPath = ""; 
 var objName = ""; 
