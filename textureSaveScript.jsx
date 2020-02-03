@@ -1,6 +1,5 @@
 
 
-
 function CreateUI(mPath, oName, pName, oType){
     
 var panelWidth = 250; 
@@ -52,6 +51,7 @@ var pathBtn = pathGrp.add("button", undefined, undefined, {name: "pathBtn"});
            }       
      }  
  
+    
     
      
 // === OBJ ===
@@ -116,6 +116,26 @@ var typeDropList = typeSelectGrp.add("dropdownlist", undefined, undefined, {name
      typeDropList.onChange = function() {
        oType = typeArray[typeDropList.selection.index];
     }
+
+// SAVEASGRP
+// =========
+var saveAsGRP = objPanel.add("group", undefined, {name: "saveAsGRP"}); 
+    saveAsGRP.orientation = "row"; 
+    saveAsGRP.alignChildren = ["left","center"]; 
+    saveAsGRP.spacing = 10; 
+    saveAsGRP.margins = 0; 
+
+var saveAsText = saveAsGRP.add("statictext", undefined, undefined, {name: "saveAsText"}); 
+    saveAsText.text = "Save As:"; 
+
+var pngBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "pngBox"}); 
+    pngBox.text = "PNG"; 
+
+var jpgBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "jpgBox"}); 
+    jpgBox.text = "JPG"; 
+
+var psdBox = saveAsGRP.add("checkbox", undefined, undefined, {name: "psdBox"}); 
+    psdBox.text = "PSD"; 
     
 //  ======== BUTTON PANEL  ========
 var buttonPanel = UI.add("panel", undefined, undefined, {name: "buttonPanel"}); 
@@ -154,10 +174,12 @@ return UI;
 
 
 
+
+
 function Save(mPath, oName, pName, oType){
     
 try{
-           var curDoc = app.activeDocument; 
+           var activeDoc = app.activeDocument; 
            var fileName = ""; 
     
             if(pName == ""){     
@@ -168,16 +190,21 @@ try{
                 fileName = oName + "_" + pName + "_" + oType; 
             }
             
-            var fullFileName = mPath + "/" + oName + "/textures/" +fileName + ".jpg"; 
-            var file = File(fullFileName);
             
-            //var jpegConfig = new JPEGSaveOptions();
-           // jpegConfig.quality = 10;
             
-            //curDoc.saveAs(file, jpegConfig);
             
-            $.writeln(fullFileName); 
+            // save as PNG texture
+            var fullFileNamePNG = mPath + "/" + oName + "/textures/" +fileName + ".png"; 
+            var PNGfile = new File(fullFileNamePNG);         
+            SavePNG(activeDoc, PNGfile);            
+            
+            // save as PSD
+            var fullFileNamePSD = mPath + "/" + oName + "/textures/" +fileName + ".psd"; 
+            var PSDfile = new File(fullFileNamePSD);         
+            SavePSD(activeDoc, PSDfile);            
+            
   }          
+
 
 catch(e){
     
@@ -189,6 +216,21 @@ catch(e){
     
 }
 
+function SavePNG(activeDoc, saveFile){
+    var pngConfig = new PNGSaveOptions();
+     //pngConfig.quality = 10;
+            
+     activeDoc.saveAs(saveFile, pngConfig, true, Extension.LOWERCASE);
+}
+
+function SavePSD(activeDoc, saveFile){
+    var psdFile = new File(saveFile);
+    psdConfig = new PhotoshopSaveOptions();
+    psdConfig.embedColorProfile = true;
+    psdConfig.alphaChannels = true;  
+    activeDoc.saveAs(saveFile, psdConfig, false, Extension.LOWERCASE);
+  
+ }
 
 
 function CreateFolders(mPath, oName){
@@ -210,6 +252,7 @@ function CreateFolders(mPath, oName){
     
     
 }
+
 
 var mainPath = ""; 
 var objName = ""; 
